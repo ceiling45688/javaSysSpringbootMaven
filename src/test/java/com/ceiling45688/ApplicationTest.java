@@ -1,4 +1,4 @@
-package com.ceiling45688.helloworld;
+package com.ceiling45688;
 
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;

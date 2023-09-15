@@ -1,2 +1,12 @@
 server:
-  port: 4791
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mydb?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 1PY1Y5oo_
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
