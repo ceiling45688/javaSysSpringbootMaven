@@ -9,7 +9,7 @@ public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 主键 自动
+    private Long id; // 主键 自动 reservationId
 
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
@@ -19,6 +19,7 @@ public class Reservation {
     @Column(nullable = false)
     private Date endDate;
 
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -27,6 +28,12 @@ public class Reservation {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "apartment_id", nullable = false)
     private Apartment apartment;
+
+
+    //一个房间只能被一个用户预定
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
 
     // constructor
     public Reservation(){
@@ -58,8 +65,24 @@ public class Reservation {
         return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setApartment(Apartment apartment) {
+        this.apartment = apartment;
+    }
+
     public Apartment getApartment() {
         return apartment;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
 }

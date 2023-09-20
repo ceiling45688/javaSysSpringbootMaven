@@ -26,8 +26,8 @@ public class Room {
     @JoinColumn(name = "apartment")
     private Apartment apartment;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Reservation> reservations;
+    @OneToOne(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Reservation reservation;
 
     public enum RoomType {
         BRONZE, SILVER, GOLD
@@ -75,9 +75,12 @@ public class Room {
         this.apartment = apartment;
     }
 
-    public List<Reservation> getReservations() {
-        return reservations;
+    public Reservation getReservation() {
+        return reservation;
     }
 
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
 
 }
