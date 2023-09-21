@@ -16,6 +16,7 @@ public class Apartment {
     @Column(nullable = false, unique = true)
     private String apartmentNumber; // 公寓号码，如20
 
+
     @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL)
     private List<Room> rooms;
 
@@ -35,6 +36,10 @@ public class Apartment {
 
     public List<Room> getRooms() {
         return rooms;
+    }
+
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
 }
