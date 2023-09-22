@@ -24,6 +24,8 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Autowired
     private ReservationService reservationService;
 
+    private static final int MAX_APARTMENTS = 20;
+    private static final int MAX_ROOMS_PER_APARTMENT = 6;
 
     @Override
     public List<String> listAvailableApartments(){
@@ -50,15 +52,26 @@ public class ApartmentServiceImpl implements ApartmentService {
         //更新数据库。
 
         // 1.从数据库中获取用户选择的公寓和房间
+
+        if(!isApartmentNumberValid(apartmentNumber)){
+            throw new IllegalArgumentException("Invalid apartment number");
+        }
+        if(!isRoomNumberValid(roomNumber)){
+            throw new IllegalArgumentException("Invalid room number");
+        }
+
+
         Apartment selectedApartment = apartmentRepository.findByApartmentNumber(apartmentNumber)
                 .orElseThrow(() -> new IllegalArgumentException("Apartment not found"));
         Room seletedRoom = roomRepository.findByRoomNumberAndAndApartment(roomNumber,selectedApartment)
                 .orElseThrow(() -> new IllegalArgumentException("Room not found"));
 
+
         // 2. room available ?
         if(seletedRoom.getStatus() != Room.RoomStatus.AVAILABLE){
             throw new IllegalStateException("Room is already occupied!");
         }
+
 
         // 3.4. create a new reservation & change status
          //待会直接用
@@ -66,5 +79,16 @@ public class ApartmentServiceImpl implements ApartmentService {
                 startDate, endDate);
 
         return selectedApartment;
+    }
+
+    // 检查公寓和房间的数量是否超出限制
+    public boolean isApartmentNumberValid(String apartmentNumber){
+        int apartmentNum = Integer.parseInt(apartmentNumber); // 得到直接的公寓号
+        return apartmentNum >= 1 && apartmentNum <= MAX_APARTMENTS;
+    }
+
+    public boolean isRoomNumberValid(String roomNumber){
+        int roomNum = Integer.parseInt(roomNumber); //
+        return roomNum >= 1 && roomNum <= MAX_ROOMS_PER_APARTMENT;
     }
 }
