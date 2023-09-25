@@ -68,7 +68,7 @@ public class ApartmentServiceTest {
     public void testReserveApartment_ApartmentNotFound() {
         when(apartmentRepository.findByApartmentNumber(anyString())).thenReturn(Optional.empty());
 
-        apartmentService.reserveApartment(1L, "A101", "R101", new Date(), new Date());
+        apartmentService.reserveApartment(1L, "1", "1", new Date(), new Date());
     }
 
     // 当所有房间都被预定时，公寓应该被视为不可用

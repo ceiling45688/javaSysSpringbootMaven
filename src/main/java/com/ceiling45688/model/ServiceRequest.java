@@ -18,14 +18,13 @@ public class ServiceRequest {
     @Column(nullable = false)
     private Status status;
 
-
     @ManyToOne
     private User user;
 
     @ManyToOne
     private Room room;
 
-    private enum Status{
+    public enum Status{
         PENDING, IN_PROGRESS, COMPLETED
     }
 
@@ -56,6 +55,8 @@ public class ServiceRequest {
 
     // getter and setter
 
+    public Long getId(){return id;}
+
     public String getDescription() {
         return description;
     }
@@ -77,9 +78,13 @@ public class ServiceRequest {
         return room.getApartment().getApartmentNumber() + "." + room.getRoomNumber();
     }
 
+    public User getUser() { return user; }
+
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Room getRoom() {return room;}
 
     public void setRoom(Room room) {
         this.room = room;

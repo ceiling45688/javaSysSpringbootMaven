@@ -37,6 +37,13 @@ public class Room {
         AVAILABLE, OCCUPIED
     }
 
+    public Room(){
+        // 没想好这个constructor还要不要
+    }
+    public Room(String roomNumber){
+        this.roomNumber = roomNumber;
+    }
+
 
     // getter and setter
     public Long getId() {
