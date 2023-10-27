@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,6 +81,23 @@ public class ApartmentServiceImpl implements ApartmentService {
 
         return selectedApartment;
     }
+
+    @Override
+    public Optional<Apartment> findByApartmentNumber(String apartmentNumber) {
+        return apartmentRepository.findByApartmentNumber(apartmentNumber);
+    }
+    @Override
+    public Optional<Room> findRoomByApartmentNumberAndRoomNumber(String apartmentNumber, String roomNumber) {
+        Optional<Apartment> apartmentOptional = apartmentRepository.findByApartmentNumber(apartmentNumber);
+        if (apartmentOptional.isPresent()) {
+            Apartment apartment = apartmentOptional.get();
+            return apartment.getRooms().stream()
+                    .filter(room -> room.getRoomNumber().equals(roomNumber))
+                    .findFirst();
+        }
+        return Optional.empty();
+    }
+
 
     // 检查公寓和房间的数量是否超出限制
     public boolean isApartmentNumberValid(String apartmentNumber){

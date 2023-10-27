@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReservationService {
-    void createReservation(Long userId, Apartment apartment, Room room, Date startDate, Date endDate);
+    Reservation createReservation(Long userId, Apartment apartment, Room room, Date startDate, Date endDate);
     void cancelReservation(Long reservationId);
     Optional<Reservation> getReservationByUser(Long userId);
 }

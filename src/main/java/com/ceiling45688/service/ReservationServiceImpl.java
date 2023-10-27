@@ -27,7 +27,7 @@ public class ReservationServiceImpl implements ReservationService {
     private UserRepository userRepository;
 
     @Override
-    public void createReservation(Long userId, Apartment apartment, Room room, Date startDate, Date endDate) {
+    public Reservation createReservation(Long userId, Apartment apartment, Room room, Date startDate, Date endDate) {
         // 创建新的预订
         Reservation reservation = new Reservation();
         reservation.setUser(userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found")));
@@ -41,7 +41,7 @@ public class ReservationServiceImpl implements ReservationService {
         roomRepository.save(room);
 
         // 保存预订到数据库
-        reservationRepository.save(reservation);
+        return reservationRepository.save(reservation);
     }
 
     @Override
