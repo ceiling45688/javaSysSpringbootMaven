@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
+    // 配置Spring MVC的CORS支持，其实后面可以删掉，因为我后面加了security了
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")

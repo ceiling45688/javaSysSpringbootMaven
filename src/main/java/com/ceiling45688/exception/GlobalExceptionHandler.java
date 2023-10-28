@@ -8,20 +8,28 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    // 使用分级日志级别，在service层记录warn，在全局异常处理器中记录error
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+
     // 处理IllegalArgumentException异常
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
+        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage(), "Invalid input provided");
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST); // 返回响应体为ErrorResponse类型 (body, headers, HttpStatus.OK);
     }
 
     // 处理EmailAlreadyExistsException异常
     @ExceptionHandler(UserServiceImpl.EmailAlreadyExistsException.class)
-    public ResponseEntity<String> handleEmailAlreadyExistsException(UserServiceImpl.EmailAlreadyExistsException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage()); // 409 Conflict
+    public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(UserServiceImpl.EmailAlreadyExistsException e) {
+        ErrorResponse error = new ErrorResponse(HttpStatus.CONFLICT.value(), e.getMessage(), "Email already exists");
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT); // 409 Conflict
     }
 
     // 注意这里处理全是controller异常，虽然是在service层抛出的，但是冒泡到调用它的controller层进行处理。
@@ -34,7 +42,16 @@ public class GlobalExceptionHandler {
 
     // 处理资源未找到的异常
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // 404 NOT FOUND
+    public ResponseEntity<ErrorResponse> handleEntityNotFoundException(EntityNotFoundException e) {
+        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), "Requested resource not found");
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND); // 404 NOT FOUND
     }
+
+
+
+
+    // 等待添加其他异常处理
+    // log只记录在service层之外的异常
+
+
 }
