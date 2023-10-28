@@ -1,31 +1,70 @@
 package com.ceiling45688.controller;
 
 import com.ceiling45688.dto.ServiceRequestDTO;
+import com.ceiling45688.model.Apartment;
 import com.ceiling45688.model.Room;
 import com.ceiling45688.model.ServiceRequest;
 import com.ceiling45688.repository.RoomRepository;
+import com.ceiling45688.service.ApartmentService;
 import com.ceiling45688.service.ServiceRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping()
+import java.util.List;
+
+@RestController
+@RequestMapping("/service-requests")
 public class ServiceController {
 
     @Autowired
     private RoomRepository roomRepository;
 
     @Autowired
+    private ApartmentService apartmentService;
+
+    @Autowired
     private ServiceRequestService serviceRequestService;
 
-    @PostMapping("/service-requests")
+    @PostMapping
     public ResponseEntity<ServiceRequest> createServiceRequest(@RequestBody ServiceRequestDTO request) {
-        Room room = roomRepository.findById(request.getRoomId()).orElseThrow(() -> new IllegalArgumentException("Room not found"));
+        // 拆分dto中的roomId为apartNumber和roomNumber
+        String[] parts = request.getRoomId().split("\\.");
+        String apartmentNumber = parts[0];
+        String roomNumber = parts[1];
+
+        // 验证公寓号和房间号的有效性
+        if (!apartmentService.isApartmentNumberValid(apartmentNumber) || !apartmentService.isRoomNumberValid(roomNumber)) {
+            throw new IllegalArgumentException("Invalid roomId provided");
+        }
+
+        // 查询公寓和房间
+        Apartment apartment = apartmentService.findByApartmentNumber(apartmentNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Apartment not found"));
+        Room room = apartmentService.findRoomByApartmentNumberAndRoomNumber(apartmentNumber, roomNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+
+
         ServiceRequest serviceRequest = serviceRequestService.createServiceRequest(request.getUserId(), request.getDescription(), room);
         return ResponseEntity.ok(serviceRequest);
+
     }
+
+    // 更新服务请求状态，使用serviceRequestId路径参数和action请求参数
+    @PutMapping("/{serviceRequestId}")
+    public ResponseEntity<ServiceRequest> updateServiceRequest(@PathVariable Long serviceRequestId, @RequestParam String action) {
+        ServiceRequest updatedServiceRequest = serviceRequestService.updateServiceRequest(serviceRequestId, action);
+        return ResponseEntity.ok(updatedServiceRequest);
+    }
+
+    // 获取特定用户的所有服务请求
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ServiceRequest>> getServiceRequestsByUser(@PathVariable Long userId) {
+        List<ServiceRequest> serviceRequests = serviceRequestService.getServiceRequestsByUser(userId);
+        return ResponseEntity.ok(serviceRequests);
+    }
+
+
+
 }

@@ -11,8 +11,12 @@ public interface ApartmentService {
 
     List<String> listAvailableApartments();
     Apartment reserveApartment(Long userId, String apartmentNumber, String roomNumber,
-                                         Date startDate, Date endDate);
+                               Date startDate, Date endDate);
     Optional<Apartment> findByApartmentNumber(String apartmentNumber);
     Optional<Room> findRoomByApartmentNumberAndRoomNumber(String apartmentNumber, String roomNumber);
+
+    // other functional methods
+    boolean isApartmentNumberValid(String apartmentNumber);
+    boolean isRoomNumberValid(String roomNumber);
 
 }

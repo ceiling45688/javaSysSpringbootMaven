@@ -1,5 +1,6 @@
 package com.ceiling45688.service;
 
+import com.ceiling45688.dto.AuthenticationResult;
 import com.ceiling45688.model.User;
 import com.ceiling45688.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ public interface UserService {
     // 用户注册
     User registerUser(User user);
     // 登录验证
-    User authenticateUser(String email, String password);
+    AuthenticationResult authenticateUser(String email, String password);
     // 用户信息更新
     User updateUserDetails(User user);
     // 付款
