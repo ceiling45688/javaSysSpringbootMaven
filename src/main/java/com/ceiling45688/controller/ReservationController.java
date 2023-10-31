@@ -8,6 +8,7 @@ import com.ceiling45688.model.Room;
 import com.ceiling45688.service.ApartmentService;
 import com.ceiling45688.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,12 +48,14 @@ public class ReservationController {
         // 3. Call the service method using the retrieved objects and other fields from the DTO
         Reservation reservation = reservationService.createReservation(request.getUserId(), apartment, room, request.getStartDate(), request.getEndDate());
 
-        return ResponseEntity.ok(reservation);
+        return new ResponseEntity<>(reservation, HttpStatus.CREATED);
+
     }
 
     @DeleteMapping("/{reservationId}")
-    public void cancelReservation(@PathVariable Long reservationId){
+    public ResponseEntity<Void>  cancelReservation(@PathVariable Long reservationId){
         reservationService.cancelReservation(reservationId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/user/{userId}")
@@ -60,9 +63,9 @@ public class ReservationController {
         Optional<Reservation> optionalReservation = reservationService.getReservationByUser(userId);
 
         if (optionalReservation.isPresent()) {
-            return ResponseEntity.ok(optionalReservation.get());// return 200ok and object
+            return new ResponseEntity<>(optionalReservation.get(), HttpStatus.OK);
         } else {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
