@@ -15,7 +15,11 @@ public interface ApartmentService {
     Optional<Apartment> findByApartmentNumber(String apartmentNumber);
     Optional<Room> findRoomByApartmentNumberAndRoomNumber(String apartmentNumber, String roomNumber);
 
-    // other functional methods
+    public List<Room> listFilteredRooms(String roomType, Date startDate, Date endDate);
+
+
+
+        // other functional methods
     boolean isApartmentNumberValid(String apartmentNumber);
     boolean isRoomNumberValid(String roomNumber);
 

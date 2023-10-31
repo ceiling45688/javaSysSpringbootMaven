@@ -44,6 +44,21 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
+    public List<Room> listFilteredRooms(String roomType, Date startDate, Date endDate){
+        // 获取所有房间。
+        List<Room> allRooms = roomRepository.findAll();
+
+        // 根据房间类型筛选房间
+        List<Room> filteredRooms = allRooms.stream()
+                .filter(room -> room.getType().toString().equalsIgnoreCase(roomType))
+                .filter(room -> room.getStatus() == Room.RoomStatus.AVAILABLE)
+                // 其他筛选条件，如日期范围等,后面加
+                .collect(Collectors.toList());
+
+        return filteredRooms;
+    }
+
+    @Override
     public Apartment reserveApartment(Long userId, String apartmentNumber, String roomNumber,
                                       Date startDate, Date endDate){
         //从前端接收用户选择的公寓和房间信息。

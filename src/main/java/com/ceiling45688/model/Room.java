@@ -4,7 +4,8 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "rooms")
+@Table(name = "rooms",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"roomNumber", "apartment_id"}))
 public class Room {
 
     @Id
@@ -23,7 +24,7 @@ public class Room {
     private RoomStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "apartment")
+    @JoinColumn(name = "apartment_id")
     private Apartment apartment;
 
     @OneToOne(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

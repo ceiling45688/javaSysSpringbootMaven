@@ -1,7 +1,9 @@
 package com.ceiling45688.controller;
 
+import com.ceiling45688.dto.FilterRequestDTO;
 import com.ceiling45688.dto.ReservationRequestDTO;
 import com.ceiling45688.model.Apartment;
+import com.ceiling45688.model.Room;
 import com.ceiling45688.service.ApartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,4 +40,15 @@ public class ApartmentController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
     }
+
+
+    //接受筛选条件并返回满足条件的房间列表。
+    @PostMapping("/rooms/filtered")
+    public ResponseEntity<List<Room>> listFilteredRooms(@RequestBody FilterRequestDTO filterRequest){
+        List<Room> filteredRooms = apartmentService.listFilteredRooms(filterRequest.getRoomType(), filterRequest.getStartDate(), filterRequest.getEndDate());
+        return ResponseEntity.ok(filteredRooms);
+    }
+
+
+
 }
