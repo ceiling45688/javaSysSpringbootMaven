@@ -34,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/signup", "/users/login", "/home").permitAll() // 允许所有人访问
                 .antMatchers("/api/admin/**").hasRole("ADMIN") // 只有ADMIN角色的用户可以访问
                 .antMatchers("/api/user/**").hasRole("CUSTOMER") // 只有CUSTOMER角色的用户可以访问
+                .antMatchers("/service-requests/**").hasAnyRole("ADMIN", "MAINTENANCE") // 只有ADMIN和MAINTENANCE角色的用户可以访问
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)

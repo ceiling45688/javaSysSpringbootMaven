@@ -51,19 +51,36 @@ public class ServiceController {
 
     }
 
-    // 更新服务请求状态，使用serviceRequestId路径参数和action请求参数
+    // 更新服务请求状态，使用serviceRequestId路径参数和action请求参数，目前没有用到
     @PutMapping("/{serviceRequestId}")
     public ResponseEntity<ServiceRequest> updateServiceRequest(@PathVariable Long serviceRequestId, @RequestParam String action) {
         ServiceRequest updatedServiceRequest = serviceRequestService.updateServiceRequest(serviceRequestId, action);
         return ResponseEntity.ok(updatedServiceRequest);
     }
 
-    // 获取特定用户的所有服务请求
+    // 批量更新服务请求
+    @PutMapping("/batch-update")
+    public ResponseEntity<Void> batchUpdateServiceRequests(@RequestBody List<ServiceRequest> updatedRequests) {
+        serviceRequestService.batchUpdateServiceRequests(updatedRequests);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 获取特定用户的所有服务请求， 目前前端没有用到
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<ServiceRequest>> getServiceRequestsByUser(@PathVariable Long userId) {
         List<ServiceRequest> serviceRequests = serviceRequestService.getServiceRequestsByUser(userId);
         return ResponseEntity.ok(serviceRequests);
     }
+
+    // 获取所有用户的服务请求
+    @GetMapping("/all")
+    public ResponseEntity<List<ServiceRequest>> getAllServiceRequests() {
+        List<ServiceRequest> serviceRequests = serviceRequestService.getAllServiceRequests();
+        return ResponseEntity.ok(serviceRequests);
+    }
+
+
+
 
 
 

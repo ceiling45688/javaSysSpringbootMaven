@@ -6,6 +6,8 @@ import com.ceiling45688.model.User;
 import com.ceiling45688.repository.RoomRepository;
 import com.ceiling45688.repository.ServiceRequestRepository;
 import com.ceiling45688.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,9 @@ import java.util.List;
 
 @Service
 public class ServiceRequestServiceImpl implements ServiceRequestService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
 
     @Autowired
     private ServiceRequestRepository serviceRequestRepository;
@@ -59,6 +64,18 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     @Override
     public List<ServiceRequest> getServiceRequestsByUser(Long userId) {
         return serviceRequestRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<ServiceRequest> getAllServiceRequests() {
+        // 使用JPA的findAll方法获取所有服务请求
+        return serviceRequestRepository.findAll();
+    }
+
+    @Override
+    public void batchUpdateServiceRequests(List<ServiceRequest> updatedRequests) {
+        // 使用JPA的saveAll方法批量更新服务请求
+        serviceRequestRepository.saveAll(updatedRequests);
     }
 
 }
